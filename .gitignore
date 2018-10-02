@@ -1,0 +1,11 @@
+.idea
+
+dist
+dist-*
+node_modules
+
+# React XP specific
+android/.gradle
+android/.idea
+android/app/build/
+android/build

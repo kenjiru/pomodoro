@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "main": "index.js",
+  "version": "0.0.1",
+  "scripts": {
+    "start:android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "start:web": "webpack-dev-server --config=web/webpack/webpack.dev.js --progress --colors",
+    "start:ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "build:web": "webpack --config=web/webpack/webpack.prod.js --progress --colors",
+    "lint": "tslint -p tsconfig.json -r tslint.json"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "3.2.0",
+    "react-native-typescript-transformer": "1.2.10",
+    "ts-loader": "5.1.1",
+    "tslint": "5.11.0",
+    "typescript": "3.0.3",
+    "webpack": "4.19.1",
+    "webpack-cli": "3.1.0",
+    "webpack-dev-server": "3.1.8",
+    "webpack-merge": "4.1.4"
+  },
+  "dependencies": {
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-native": "0.55.4",
+    "react-native-windows": "0.54.0",
+    "reactxp": "1.4.0"
+  },
+  "name": "pomodoro"
+}
