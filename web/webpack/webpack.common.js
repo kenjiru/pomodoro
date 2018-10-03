@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const ROOT_PATH = path.join(__dirname, '..', '..');
 const DIST_PATH = path.join(ROOT_PATH, 'dist-web');
@@ -16,6 +17,11 @@ const config = {
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
+        plugins: [
+            new TsconfigPathsPlugin({
+                configFile: TS_CONFIG_PATH,
+            }),
+        ],
     },
 
     module: {
