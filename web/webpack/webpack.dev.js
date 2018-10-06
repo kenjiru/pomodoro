@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const { config, APP_PATH } = require('./webpack.common');
 
@@ -11,4 +12,10 @@ module.exports = merge(config, {
         port: 9999,
         stats: 'minimal',
     },
+    plugins: [
+        new webpack.NormalModuleReplacementPlugin(
+            /mobx-react\/native/,
+            "mobx-react",
+        ),
+    ],
 });
