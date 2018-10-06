@@ -1,7 +1,10 @@
+import { inject, observer } from 'mobx-react/native';
 import { Component } from 'react';
 import * as RX from 'reactxp';
 import { StartView } from 'src/components/pomodoro-panel/StartView';
 import { TimerView } from 'src/components/pomodoro-panel/TimerView';
+import { SessionsStore } from 'src/model/SessionsStore';
+import { SettingsStore } from 'src/model/SettingsStore';
 import { constants } from 'src/util/StyleConstants';
 import { Panel } from 'src/widgets/panel/Panel';
 
@@ -23,12 +26,20 @@ export const enum Phase {
     Canceled = 'Canceled',
 }
 
+interface PomodoroPanelProps {
+    sessionsStore?: SessionsStore;
+    settingsStore?: SettingsStore;
+}
+
 interface PomodoroPanelState {
     phase: Phase;
 }
 
-export class PomodoroPanel extends Component<{}, PomodoroPanelState> {
-    constructor(props: {}) {
+@inject('sessionsStore')
+@inject('settingsStore')
+@observer
+export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelState> {
+    constructor(props: PomodoroPanelProps) {
         super(props);
 
         this.state = {
@@ -69,17 +80,29 @@ export class PomodoroPanel extends Component<{}, PomodoroPanelState> {
         this.setState({
             phase: Phase.Running,
         });
-    };
+    }
 
     private handleCancelTimer = () => {
         this.setState({
             phase: Phase.Canceled,
         });
-    };
+    }
 
     private handleFinishTimer = () => {
+        this.addSession();
+        this.finishPhase();
+    }
+
+    private addSession() {
+        const { sessionsStore, settingsStore } = this.props;
+        const sessionDuration = settingsStore!.getSessionDuration();
+
+        sessionsStore!.addSession(sessionDuration);
+    }
+
+    private finishPhase() {
         this.setState({
             phase: Phase.Finished,
         });
-    };
+    }
 }
