@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 interface WorkSession {
     startTime: number;
     minutes: number;
+    project: string;
 }
 
 export class SessionsStore {
@@ -15,10 +16,11 @@ export class SessionsStore {
     }
 
     @action
-    public addSession(minutes: number) {
+    public addSession(project: string, minutes: number) {
         this.sessions.push({
             startTime: Date.now(),
             minutes,
+            project,
         });
     }
 }

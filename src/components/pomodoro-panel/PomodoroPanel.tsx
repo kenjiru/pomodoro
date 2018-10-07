@@ -3,6 +3,7 @@ import { Component } from 'react';
 import * as RX from 'reactxp';
 import { StartView } from 'src/components/pomodoro-panel/StartView';
 import { TimerView } from 'src/components/pomodoro-panel/TimerView';
+import { ProjectsStore } from 'src/model/ProjectsStore';
 import { SessionsStore } from 'src/model/SessionsStore';
 import { SettingsStore } from 'src/model/SettingsStore';
 import { constants } from 'src/util/StyleConstants';
@@ -29,14 +30,17 @@ export const enum Phase {
 interface PomodoroPanelProps {
     sessionsStore?: SessionsStore;
     settingsStore?: SettingsStore;
+    projectsStore?: ProjectsStore;
 }
 
 interface PomodoroPanelState {
     phase: Phase;
+    selectedProject: string;
 }
 
 @inject('sessionsStore')
 @inject('settingsStore')
+@inject('projectsStore')
 @observer
 export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelState> {
     constructor(props: PomodoroPanelProps) {
@@ -44,6 +48,7 @@ export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelSt
 
         this.state = {
             phase: Phase.New,
+            selectedProject: props.settingsStore!.getDefaultProject(),
         };
     }
 
@@ -57,7 +62,7 @@ export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelSt
     }
 
     private renderContent() {
-        const { phase } = this.state;
+        const { phase, selectedProject } = this.state;
 
         if (phase === Phase.Running) {
             return (
@@ -72,8 +77,16 @@ export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelSt
             <StartView
                 phase={phase}
                 onStart={this.handleStart}
+                selectedProject={selectedProject}
+                onProjectChange={this.handleProjectChange}
             />
         );
+    }
+
+    private handleProjectChange = (selectedProject: string) => {
+        this.setState({
+            selectedProject,
+        });
     }
 
     private handleStart = () => {
@@ -95,9 +108,10 @@ export class PomodoroPanel extends Component<PomodoroPanelProps, PomodoroPanelSt
 
     private addSession() {
         const { sessionsStore, settingsStore } = this.props;
+        const { selectedProject } = this.state;
         const sessionDuration = settingsStore!.getSessionDuration();
 
-        sessionsStore!.addSession(sessionDuration);
+        sessionsStore!.addSession(selectedProject, sessionDuration);
     }
 
     private finishPhase() {
